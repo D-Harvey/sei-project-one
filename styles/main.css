@@ -24,8 +24,8 @@ body {
   justify-content: center;
 }
 .game-grid div {
-  width: 25px;
-  height: 27px;
+  width: 33px;
+  /* height: 27px; */
   border: 1px solid black;
   /* width: 4.7%;
   height: 3%; */
@@ -35,7 +35,12 @@ body {
 
 .pacman {
   background-image: url('../assets/characters/pacman.png');   
-  background-size: cover;
+  background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
+}
+
+.NoGoZoneCells {
+background-color: black;
+color: white;
 }
