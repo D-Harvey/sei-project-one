@@ -4,6 +4,7 @@ body {
   justify-content: space-around;
   height: 100vh;
   background-color: black;
+  color: white;
 }
 
 .information {
@@ -16,7 +17,6 @@ body {
     background-repeat: no-repeat;
 }
 
-
 .game-grid   {
   width: 700px;
   padding: 30px 50px 30px 50px;
@@ -24,6 +24,7 @@ body {
   flex-wrap: wrap;
   justify-content: center;
 }
+
 .game-grid div {
   width: 34px;
   /* height: 27px; */
@@ -41,19 +42,19 @@ body {
   background-position: center;
 }
 
+.red-ghost {
+  background-image: url('../assets/characters/red-ghost.png');   
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+}
+
 .noGoZoneCells {
-background-color: black;
+background-color: blue;
 color: white;
 }
 
 .ghostTownCells {
-  background-color: black;
+  background-color: darkblue;
   color: white;
 }
-
-/* .blueBordeCells {
-  background-color: black;
-  border-right: 8px solid blue;
-  border-left: 8px solid blue;
-  color: white;
-} */
