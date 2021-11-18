@@ -12,7 +12,7 @@ const superpills = [61, 78, 441, 458]
 const ghostBoundary = [263, 264, 266, 273, 274, 275, 229, 109, 329, 449, 569]
 const wormholes = [278, 261]
 const ghostTownEnter = 229
-
+let superPoints = 0
 
 const ghosts = ['red', 'blue', 'pink', 'orange']
 let ghostPosition = [64, 75, 503, 517]
@@ -26,16 +26,20 @@ const breakLoop = 3
 let pacmanPosition = 569
 
 
-let timerId = null
-let timerIdTwo = null
-let timerIdThree = null
-let timerIdFour = null
-let timerIdFive = null
-let ghostEatingTimer = null
-let ghostEyes = null
+
+
+let pacmanY = Math.floor(pacmanPosition / width)
+
+let pacmanX = Math.floor(pacmanPosition % width)
+
+
+
+
 const ghostDangerTimer = 30000
-const lifeCells = []
-let stop = 0
+let lifeCells = []
+
+
+
 
 let ghostSpeed = 500
 const ghostDeadSpeed = 200
@@ -57,22 +61,25 @@ const sound = document.querySelector('#audio')
 // information window functions
 let lives = 3
 function buildingPacmanLivesDivsOnInfoScreen() {
-  for (let i = 0; i < lives; i++){
-    const lifeCell = document.createElement('div')
-    showLives.appendChild(lifeCell)
-    lifeCells.push(lifeCell)
-    lifeCell.classList.add('lives')
-    // lifeCell.innerHTML = lives
-  }
+  
+  // console.log('lf 1', lifeCells)
+  // for (let i = 0; i < lives; i++){
+  //   const lifeCell = document.createElement('div')
+  //   showLives.appendChild(lifeCell)
+  //   lifeCells.push(lifeCell)
+  //   // lifeCell.classList.add('lives')
+  //   lifeCell.innerHTML = lives
+  const lifeCell = document.querySelector('.livesLeft')
+  lifeCell.innerText = lives
 }
 
 let score = 0
 function showingScore() {
   showScore.innerText = score
-  if (score === 2330) {
-    window.alert('You Win!!')
-    return
-  }
+  // if (score === 2330) {
+  //   window.alert('You Win!!')
+  //   return
+  // }
 }
 
 // sound effect functions
@@ -139,17 +146,10 @@ function buildTheGameGrid () {
 
 // in game functions
 function startGame() {
-
-  console.log('lives', lives)
-  console.log('time', timerId)
-  console.log(ghostSpeed)
   removeGhost()
   removePacman()
   ghostPosition = [64, 75, 503, 517]
   pacmanPosition = 569
-  clearInterval(timerId)
-  timerId = null
-  timerIdTwo = null
   buildingPacmanLivesDivsOnInfoScreen()
   addGhost()
   addPacman()
@@ -159,8 +159,27 @@ function startGame() {
   }
 }
 
+function startGameAgain() {
+  console.log('here')
+  if (lives >= 1){
+    console.log('here2')
+    removeGhost()
+    removePacman()
+    ghostPosition = [64, 75, 503, 517]
+    pacmanPosition = 569
+    lives --
+    buildingPacmanLivesDivsOnInfoScreen()
+    addGhost()
+    addPacman()
+    document.addEventListener('keyup', handleKeyUp)
+    for ( let i = 0; i < ghosts.length; i++) {  
+      spookyMoving(i)
+    }
+  } else {window.alert('done')}
+}
+
 function easyLevel() {
-  ghostSpeed = 500
+  ghostSpeed = 1000
   startGame()
 }
 easyBtn.addEventListener('click', easyLevel)
@@ -177,55 +196,25 @@ function hardLevel() {
 }
 hardBtn.addEventListener('click', hardLevel)
 
-function endGame() {
-
-  
-  clearInterval(timerId)
-  // clearInterval(timerId)
-  // clearInterval(timerId)
-  // clearInterval(timerId)
-  // clearInterval(timerIdTwo)
-  // clearInterval(timerIdThree)
-  // clearInterval(timerIdFour)
-  // clearInterval(timerIdFive)
-  // clearInterval(ghostEatingTimer)
-  // clearInterval()
-  timerId = 'stop working'
-stop = 1
-console.log(stop)
-console.log('dead in end game')
-console.log('end game time', timerId)
-return
-
-}
-
 // ghost movement
 function spookyMoving(i) {
-  console.log('stop', stop)
-  clearInterval(ghostEatingTimer)
-  timerId = setInterval(() => {
-    console.log('in the game', timerId)
-    if (stop === 1){
-      clearInterval(timerId)
-      return
-    }
+  superPoints = 0
+  removeEatableGhost(i)
+  removeGhostEyes(i)
+  const timerId = setInterval(() => {
     if (ghostPosition[0] === pacmanPosition
     || ghostPosition[1] === pacmanPosition
     || ghostPosition[2] === pacmanPosition
     || ghostPosition[3] === pacmanPosition
     ) {
-      console.log('dead')
       clearInterval(timerId)
-      clearInterval(timerIdTwo)
-      clearInterval(timerIdThree)
-      clearInterval(timerIdFour)
-      clearInterval(timerIdFive)
-      clearInterval(ghostEatingTimer)
-      clearInterval()
-      console.log('in death', timerId)
-      timerId = 'stop working'
-      
       return pacmanIsDead()
+    }
+    else if (superPoints === 10 
+    ) {
+      pacmanEatingGhosts(i)
+      clearInterval(timerId)
+      return 
     } else if (ghostPosition[i] === 278) {
       removeGhost()
       ghostPosition[i] = 262
@@ -237,47 +226,45 @@ function spookyMoving(i) {
     }
     
     else {
-      const pacmanY = Math.floor(pacmanPosition / width)
+      console.log('still in spooky')
+      
+
+      pacmanY = Math.floor(pacmanPosition / width)
+      pacmanX = Math.floor(pacmanPosition % width)
+
+
       ghostY[i] = Math.floor(ghostPosition[i] / width)
-      const pacmanX = Math.floor(pacmanPosition % width)
       ghostX[i] = Math.floor(ghostPosition[i] % width)
-      // console.log('pm x ', pacmanX, 'pm y ', pacmanY)
-      // console.log('gh x ', ghostX, 'gh y ', ghostY)
 
-      ghostDistanceX[i] = (Math.abs(ghostX[i] - pacmanX)) 
+
       ghostDistanceY[i] = (Math.abs(ghostY[i] - pacmanY))
+      ghostDistanceX[i] = (Math.abs(ghostX[i] - pacmanX)) 
 
-      // console.log('ghostDistanceX', ghostDistanceX, 'ghostDistanceY', ghostDistanceY)
 
       if (ghostDistanceX[i] >= ghostDistanceY[i]){
-        // console.log('here 1')
         // move horizontally
         if (pacmanPosition >= ghostPosition[i]) {
           // move right
           if (!cells[ghostPosition[i] + 1].classList.contains('noGoZoneCells')) {
             // if no border to the right
-            // console.log('here 2')
             removeGhost()
             ghostPosition[i] ++
             addGhost()
             return
           } else if (!cells[ghostPosition[i] + 20].classList.contains('noGoZoneCells')){
             // must be a border on the right, so let's go down
-            // console.log('here 3')
             removeGhost()
             ghostPosition[i] += 20
             addGhost()
             return
           } else if (!cells[ghostPosition[i] - 20].classList.contains('noGoZoneCells')) {
             // must be border below and to right, so let's go up 3 spaces to break the trap
-            // console.log('here 4')
             // upThreeToBreakTrap(i)
             return
           }
         } else if (pacmanPosition < ghostPosition[i]) {
           //  move left
           if (!cells[ghostPosition[i] - 1].classList.contains('noGoZoneCells')){
-            // console.log('here 5')
             // if no border to the left
             removeGhost()
             ghostPosition[i] --
@@ -285,14 +272,12 @@ function spookyMoving(i) {
             return
           } else if (!cells[ghostPosition[i] - 20].classList.contains('noGoZoneCells')){
             // must be a border on the left, so let's go up
-            // console.log('here 6')
             removeGhost()
             ghostPosition[i] -= 20
             addGhost()
             return
           } else if (!cells[ghostPosition[i] + 20].classList.contains('noGoZoneCells')) {
             // must be border above and to left, so let's go down 3 to break the trap
-            // console.log('here 7')
             // downThreeToBreakTrap(i)
             return
           }
@@ -300,48 +285,39 @@ function spookyMoving(i) {
       } else if (ghostDistanceX[i] < ghostDistanceY[i]) {
         // move vertically
         if (pacmanPosition > ghostPosition[i]) {
-          // console.log('here 8')
           // move down
           if (!cells[ghostPosition[i] + 20].classList.contains('noGoZoneCells')){
             // if no border below
-            // console.log('here 9')
             removeGhost()
             ghostPosition[i] += 20
             addGhost()
             return
           } else if (!cells[ghostPosition[i] + 1].classList.contains('noGoZoneCells')){
-            // console.log('here vert 4')
             // must be a border below, so let's go right
-            // console.log('here 10')
             removeGhost()
             ghostPosition[i] ++
             addGhost()
             return
           } else if (!cells[ghostPosition[i] - 1].classList.contains('noGoZoneCells')) {
-            // console.log('here 11')
             // must be border below and to right, so let's go left 3 to break the trap
             // leftThreeToBreakTrap(i)
             return
           }
         } else if (pacmanPosition < ghostPosition[i]) {
-          // console.log('here 12')
           // move up
           if (!cells[ghostPosition[i] - 20].classList.contains('noGoZoneCells')){
-            // console.log('here 13')
             // if no border above
             removeGhost()
             ghostPosition[i] -= 20
             addGhost()
             return
           } else if (!cells[ghostPosition[i] - 1].classList.contains('noGoZoneCells')){
-            // console.log('here 14')
             // must be a border above, so let's go left
             removeGhost()
             ghostPosition[i] --
             addGhost()
             return
           } else if (!cells[ghostPosition[i] + 1].classList.contains('noGoZoneCells')) {
-            // console.log('here 15')
             // must be border above and to left, so let's go right 3 to break the trap
             // rightThreeToBreakTrap(i)
             return
@@ -352,110 +328,111 @@ function spookyMoving(i) {
   }, ghostSpeed)
 }
 
-function upThreeToBreakTrap(i) {
-  // console.log('up three to break trap')
-  if (
-    (!cells[ghostPosition[i] - 20].classList.contains('noGoZoneCells')
-    && !cells[ghostPosition[i] - 40].classList.contains('noGoZoneCells')
-    && !cells[ghostPosition[i] - 60].classList.contains('noGoZoneCells'))
-    // || ghostY[i] > 4
+// function upThreeToBreakTrap(i) {
+//   console.log('spookyindex17', i)
+//   // console.log('up three to break trap')
+//   if (
+//     (!cells[ghostPosition[i] - 20].classList.contains('noGoZoneCells')
+//     && !cells[ghostPosition[i] - 40].classList.contains('noGoZoneCells')
+//     && !cells[ghostPosition[i] - 60].classList.contains('noGoZoneCells'))
+//     // || ghostY[i] > 4
     
-    ) {
-    for (let up = 0; up < breakLoop; up++) {
-      timerIdTwo = setInterval(() => {
-        removeGhost()
-        ghostPosition[i] -= 20
-        addGhost()
-      }, ghostSpeed)
-    }
-  spookyMoving()
-} else if (!cells[ghostPosition[i] + 20].classList.contains('noGoZoneCells')
-    && !cells[ghostPosition[i] + 40].classList.contains('noGoZoneCells')
-    && !cells[ghostPosition[i] + 60].classList.contains('noGoZoneCells')){
-    // console.log('ESLE IF up three to break trap')
-    downThreeToBreakTrap(i)
-  }
-}
+//   ) {
+//     for (let up = 0; up < breakLoop; up++) {
+//       console.log('spookyindex18', i)
+//       timerIdTwo = setInterval(() => {
+//         removeGhost()
+//         ghostPosition[i] -= 20
+//         addGhost()
+//       }, ghostSpeed)
+//     }
+//     spookyMoving(i)
+//   } else if (!cells[ghostPosition[i] + 20].classList.contains('noGoZoneCells')
+//     && !cells[ghostPosition[i] + 40].classList.contains('noGoZoneCells')
+//     && !cells[ghostPosition[i] + 60].classList.contains('noGoZoneCells')){
+//       console.log('spookyindex19', i)
+//     // console.log('ESLE IF up three to break trap')
+//     downThreeToBreakTrap(i)
+//   }
+// }
 
-function downThreeToBreakTrap(i) {
-  // console.log('down three to break trap')
-  if ((!cells[ghostPosition[i] + 20].classList.contains('noGoZoneCells')
-    && !cells[ghostPosition[i] + 40].classList.contains('noGoZoneCells')
-    && !cells[ghostPosition[i] + 60].classList.contains('noGoZoneCells'))
-    // || ghostY[i] < 25
-    ) {
-    for (let down = 0; down < breakLoop; down++) {
-      timerIdThree = setInterval(() => {
-        removeGhost()
-        ghostPosition[i] += 20
-        addGhost()
-      }, ghostSpeed)
-    }
-    spookyMoving()
-  } else if (!cells[ghostPosition[i] - 20].classList.contains('noGoZoneCells')
-    && !cells[ghostPosition[i] - 40].classList.contains('noGoZoneCells')
-    && !cells[ghostPosition[i] - 60].classList.contains('noGoZoneCells')){
-    console.log('ESLE IF down three to break trap')
-    upThreeToBreakTrap(i)
-  }
-}
+// function downThreeToBreakTrap(i) {
+//   // console.log('down three to break trap')
+//   if ((!cells[ghostPosition[i] + 20].classList.contains('noGoZoneCells')
+//     && !cells[ghostPosition[i] + 40].classList.contains('noGoZoneCells')
+//     && !cells[ghostPosition[i] + 60].classList.contains('noGoZoneCells'))
+//   // || ghostY[i] < 25
+//   ) {
+//     for (let down = 0; down < breakLoop; down++) {
+//       timerIdThree = setInterval(() => {
+//         removeGhost()
+//         ghostPosition[i] += 20
+//         addGhost()
+//       }, ghostSpeed)
+//     }
+//     spookyMoving(i)
+//   } else if (!cells[ghostPosition[i] - 20].classList.contains('noGoZoneCells')
+//     && !cells[ghostPosition[i] - 40].classList.contains('noGoZoneCells')
+//     && !cells[ghostPosition[i] - 60].classList.contains('noGoZoneCells')){
+//     console.log('ESLE IF down three to break trap')
+//     upThreeToBreakTrap(i)
+//   }
+// }
 
-function leftThreeToBreakTrap(i) {
-  console.log('left three to break trap')
+// function leftThreeToBreakTrap(i) {
+//   console.log('left three to break trap')
   
-  if ((!cells[ghostPosition[i] - 1].classList.contains('noGoZoneCells')
-    && !cells[ghostPosition[i] - 2].classList.contains('noGoZoneCells')
-    && !cells[ghostPosition[i] - 3].classList.contains('noGoZoneCells'))
-    // || ghostX[i] > 4
-    ) {
-    for (let left = 0; left < breakLoop; left++) {
-      timerIdFour = setInterval(() => {
-        removeGhost()
-        ghostPosition[i] -= 1
-        addGhost()
-      }, ghostSpeed)
-    }
-    spookyMoving()
-  } else if (!cells[ghostPosition[i] + 1].classList.contains('noGoZoneCells')
-    && !cells[ghostPosition[i] + 2].classList.contains('noGoZoneCells')
-    && !cells[ghostPosition[i] + 3].classList.contains('noGoZoneCells')) {
-    console.log('ESLE IF left three to break trap')
-    rightThreeToBreakTrap(i)
-  }
-}
+//   if ((!cells[ghostPosition[i] - 1].classList.contains('noGoZoneCells')
+//     && !cells[ghostPosition[i] - 2].classList.contains('noGoZoneCells')
+//     && !cells[ghostPosition[i] - 3].classList.contains('noGoZoneCells'))
+//   // || ghostX[i] > 4
+//   ) {
+//     for (let left = 0; left < breakLoop; left++) {
+//       timerIdFour = setInterval(() => {
+//         removeGhost()
+//         ghostPosition[i] -= 1
+//         addGhost()
+//       }, ghostSpeed)
+//     }
+//     spookyMoving(i)
+//   } else if (!cells[ghostPosition[i] + 1].classList.contains('noGoZoneCells')
+//     && !cells[ghostPosition[i] + 2].classList.contains('noGoZoneCells')
+//     && !cells[ghostPosition[i] + 3].classList.contains('noGoZoneCells')) {
+//     console.log('ESLE IF left three to break trap')
+//     rightThreeToBreakTrap(i)
+//   }
+// }
 
-function rightThreeToBreakTrap(i) {
-  console.log('right three to break trap')
-  console.log('TIME')
-  if ((!cells[ghostPosition[i] + 1].classList.contains('noGoZoneCells')
-    && !cells[ghostPosition[i] + 2].classList.contains('noGoZoneCells')
-    && !cells[ghostPosition[i] + 3].classList.contains('noGoZoneCells'))
-    // || ghostX[i] < 15
-    ) {
-    for (let right = 0; right < breakLoop; right++) {
-      timerIdFive = setInterval(() => {
-        console.log('IN LOOP right three to break trap')
-        removeGhost()
-        ghostPosition[i] += 3
-        addGhost()
-      }, ghostSpeed)
-    }
-    spookyMoving()
-  } else if (!cells[ghostPosition[i] - 1].classList.contains('noGoZoneCells')
-    && !cells[ghostPosition[i] - 2].classList.contains('noGoZoneCells')
-    && !cells[ghostPosition[i] - 3].classList.contains('noGoZoneCells')) {
-    console.log('ESLE IF right three to break trap')
-    leftThreeToBreakTrap(i)
-  }
-}
+// function rightThreeToBreakTrap(i) {
+//   console.log('right three to break trap')
+//   console.log('TIME')
+//   if ((!cells[ghostPosition[i] + 1].classList.contains('noGoZoneCells')
+//     && !cells[ghostPosition[i] + 2].classList.contains('noGoZoneCells')
+//     && !cells[ghostPosition[i] + 3].classList.contains('noGoZoneCells'))
+//   // || ghostX[i] < 15
+//   ) {
+//     for (let right = 0; right < breakLoop; right++) {
+//       timerIdFive = setInterval(() => {
+//         console.log('IN LOOP right three to break trap')
+//         removeGhost()
+//         ghostPosition[i] += 3
+//         addGhost()
+//       }, ghostSpeed)
+//     }
+//     spookyMoving(i)
+//   } else if (!cells[ghostPosition[i] - 1].classList.contains('noGoZoneCells')
+//     && !cells[ghostPosition[i] - 2].classList.contains('noGoZoneCells')
+//     && !cells[ghostPosition[i] - 3].classList.contains('noGoZoneCells')) {
+//     console.log('ESLE IF right three to break trap')
+//     leftThreeToBreakTrap(i)
+//   }
+// }
 
 function addGhost() {
   cells[ghostPosition[0]].classList.add('red-ghost')
   cells[ghostPosition[1]].classList.add('blue-ghost')
   cells[ghostPosition[2]].classList.add('pink-ghost')
   cells[ghostPosition[3]].classList.add('orange-ghost')
-  // cells[ghostPosition[4]].classList.add('hunter-ghost')
-  // console.log('ghost position', ghostPosition)
 }
 
 function removeGhost() {
@@ -473,8 +450,7 @@ function handleKeyUp(ev) {
     || ghostPosition[1] === pacmanPosition
     || ghostPosition[2] === pacmanPosition
     || ghostPosition[3] === pacmanPosition
-    ) {
-    console.log('score', score, 'lives', lives)
+  ) {
     return
   } else if (pacmanPosition === 278) {
     removePacman()
@@ -551,158 +527,187 @@ function pacmanEats() {
     showingScore()
   } else if (cells[pacmanPosition].classList.contains('super')) {
     score += 100
+    superPoints = 10
     cells[pacmanPosition].classList.remove('super')
     removeGhost()
-    addEatableGhost()
-    pacmanEatingGhosts()
+    // addEatableGhost()
+    // pacmanEatingGhosts(i)
     showingScore()
   }
 }
 
 function pacmanIsDead() {
-  // handleDeathMusic()
-  // startGame()
-console.log('pacman is dead')
-  lives --
-
-  endGame()
+  handleDeathMusic()
+  // lives --
+  console.log(lives)
+  startGameAgain()
   return
 }
 
 // pacman eating ghosts
 
-function addEatableGhost() {
-  cells[ghostPosition[0]].classList.add('eatable-ghost')
-  cells[ghostPosition[1]].classList.add('eatable-ghost')
-  cells[ghostPosition[2]].classList.add('eatable-ghost')
-  cells[ghostPosition[3]].classList.add('eatable-ghost')
+function addEatableGhost(i) {
+  cells[ghostPosition[i]].classList.add('eatable-ghost')
+  // cells[ghostPosition[1]].classList.add('eatable-ghost')
+  // cells[ghostPosition[2]].classList.add('eatable-ghost')
+  // cells[ghostPosition[3]].classList.add('eatable-ghost')
   // cells[ghostPosition[4]].classList.add('hunter-ghost')
   // console.log('ghost position', ghostPosition)
 }
 
-function removeEatableGhost() {
-  cells[ghostPosition[0]].classList.remove('eatable-ghost')
-  cells[ghostPosition[1]].classList.remove('eatable-ghost')
-  cells[ghostPosition[2]].classList.remove('eatable-ghost')
-  cells[ghostPosition[3]].classList.remove('eatable-ghost')
+function removeEatableGhost(i) {
+  cells[ghostPosition[i]].classList.remove('eatable-ghost')
+  // cells[ghostPosition[i]].classList.remove('eatable-ghost')
+  // cells[ghostPosition[i]].classList.remove('eatable-ghost')
+  // cells[ghostPosition[i]].classList.remove('eatable-ghost')
   // cells[ghostPosition[4]].classList.remove('hunter-ghost')
 }
 
+
 function pacmanEatingGhosts(i) {
+  console.log('just into eating ghosts', i)
   // 30" timer for ghost eating
-  ghostEatingTimer = setInterval(() => {
-    timerIdTwo = setInterval(() => {
+  removeGhost()
+  console.log('eating ghosts')
+  let ghostsec = 0
+  const ghostEatingTimer = setInterval(() => {
+    console.log('just into interval', i)
+    console.log('ghost timer', ghostEatingTimer)
+    cells[230].classList.remove('ghost-eyes')
+    ghostsec ++
+    if (ghostsec >= 30) {
+      clearInterval(ghostEatingTimer)
+      // console.log('in ticker')
+      return spookyMoving(i)
+    } 
+    {console.log('gh sec', ghostsec)
+      console.log('in ghost actions')
       if (ghostPosition[0] === pacmanPosition
     || ghostPosition[1] === pacmanPosition
     || ghostPosition[2] === pacmanPosition
     || ghostPosition[3] === pacmanPosition) {
-        ghostIsDead(i)
-      } else {
-        const pacmanY = Math.floor(pacmanPosition / width)
-        ghostY[i] = Math.floor(ghostPosition[i] / width)
-        const pacmanX = Math.floor(pacmanPosition % width)
-        ghostX[i] = Math.floor(ghostPosition[i] % width)
-        // console.log('pm x ', pacmanX, 'pm y ', pacmanY)
-        // console.log('gh x ', ghostX, 'gh y ', ghostY)
+        score += 500
+        return ghostIsDead(i)
+      } 
+      // else {
+      console.log('into else')
+      ghostsec ++
 
-        ghostDistanceX[i] = (Math.abs(ghostX[i] - pacmanX)) 
-        ghostDistanceY[i] = (Math.abs(ghostY[i] - pacmanY))
+      pacmanY = Math.floor(pacmanPosition / width)
+      pacmanX = Math.floor(pacmanPosition % width)
+      console.log('pm y', pacmanY)
+      console.log('pm x', pacmanX)
 
-        // console.log('ghostDistanceX', ghostDistanceX, 'ghostDistanceY', ghostDistanceY)
+      ghostY[i] = Math.floor(ghostPosition[i] / width)
+      ghostX[i] = Math.floor(ghostPosition[i] % width)
+      console.log('gh y', ghostY) 
+      console.log('gh x', ghostX) 
 
-        if (ghostDistanceX[i] <= ghostDistanceY[i]){
-          // console.log('here 1')
-          // move horizontally
-          if (pacmanPosition <= ghostPosition[i]) {
+      ghostDistanceY[i] = (Math.abs(ghostY[i] - pacmanY))
+      ghostDistanceX[i] = (Math.abs(ghostX[i] - pacmanX)) 
+      console.log('gh dis y', ghostDistanceY) 
+      console.log('gh dis x', ghostDistanceX) 
+      
+      if (ghostDistanceX[i] <= ghostDistanceY[i]){
+        console.log('here 1')
+        // move horizontally
+        if (pacmanPosition <= ghostPosition[i]) {
           // move right
-            if (!cells[ghostPosition[i] + 1].classList.contains('noGoZoneCells')) {
+          console.log('here 2')
+          if (!cells[ghostPosition[i] + 1].classList.contains('noGoZoneCells')) {
+            console.log('here 3')
             // if no border to the right
-              removeEatableGhost()
-              ghostPosition[i] ++
-              addEatableGhost()
-              return
-            } else if (!cells[ghostPosition[i] + 20].classList.contains('noGoZoneCells')){
+            removeEatableGhost(i)
+            ghostPosition[i] ++
+            addEatableGhost(i)
+            return
+          }  if (!cells[ghostPosition[i] + 20].classList.contains('noGoZoneCells')){
             // must be a border on the right, so let's go down
-              removeEatableGhost()
-              ghostPosition[i] += 20
-              addEatableGhost()
-              return
-            } else if (!cells[ghostPosition[i] - 20].classList.contains('noGoZoneCells')) {
+            removeEatableGhost(i)
+            ghostPosition[i] += 20
+            addEatableGhost(i)
+            return
+          } 
+          else if (!cells[ghostPosition[i] - 20].classList.contains('noGoZoneCells')) {
             // must be border below and to right, so let's go up 3 spaces to break the trap
-              upThreeToBreakTrap(i)
-              return
-            }
-          } else if (pacmanPosition > ghostPosition[i]) {
-          //  move left
-            if (!cells[ghostPosition[i] - 1].classList.contains('noGoZoneCells')){
-            // if no border to the left
-              removeEatableGhost()
-              ghostPosition[i] --
-              addEatableGhost()
-              return
-            } else if (!cells[ghostPosition[i] - 20].classList.contains('noGoZoneCells')){
-            // must be a border on the left, so let's go up
-              removeEatableGhost()
-              ghostPosition[i] -= 20
-              addEatableGhost()
-              return
-            } else if (!cells[ghostPosition[i] + 20].classList.contains('noGoZoneCells')) {
-            // must be border above and to left, so let's go down 3 to break the trap
-              downThreeToBreakTrap(i)
-              return
-            }
+            // upThreeToBreakTrap(i)
+            return
           }
-        } else if (ghostDistanceX[i] > ghostDistanceY[i]) {
+        } else if (pacmanPosition > ghostPosition[i]) {
+          //  move left
+          if (!cells[ghostPosition[i] - 1].classList.contains('noGoZoneCells')){
+            // if no border to the left
+            removeEatableGhost(i)
+            ghostPosition[i] --
+            addEatableGhost(i)
+            return
+          } else if (!cells[ghostPosition[i] - 20].classList.contains('noGoZoneCells')){
+            // must be a border on the left, so let's go up
+            removeEatableGhost(i)
+            ghostPosition[i] -= 20
+            addEatableGhost(i)
+            return
+          } else if (!cells[ghostPosition[i] + 20].classList.contains('noGoZoneCells')) {
+            // must be border above and to left, so let's go down 3 to break the trap
+            // downThreeToBreakTrap(i)
+            return
+          }
+        }
+      } else if (ghostDistanceX[i] > ghostDistanceY[i]) {
+        console.log('here 5')
         // move vertically
-          if (pacmanPosition > ghostPosition[i]) {
+        if (pacmanPosition > ghostPosition[i]) {
+          console.log('here 6')
           // move down
-            if (!cells[ghostPosition[i] + 20].classList.contains('noGoZoneCells')){
+          if (!cells[ghostPosition[i] + 20].classList.contains('noGoZoneCells')){
+            console.log('here 7')
             // if no border below
-              removeEatableGhost()
-              ghostPosition[i] += 20
-              addEatableGhost()
-              return
-            } else if (!cells[ghostPosition[i] + 1].classList.contains('noGoZoneCells')){
-              // console.log('here vert 4')
-              // must be a border below, so let's go right
-              removeEatableGhost()
-              ghostPosition[i] ++
-              addEatableGhost()
-              return
-            } else if (!cells[ghostPosition[i] - 1].classList.contains('noGoZoneCells')) {
-              // console.log('here vert 5')
-              // must be border below and to right, so let's go left 3 to break the trap
-              leftThreeToBreakTrap(i)
-              return
-            }
-          } else if (pacmanPosition > ghostPosition[i]) {
-            // console.log('here vert 2')
-            // move up
-            if (!cells[ghostPosition[i] - 20].classList.contains('noGoZoneCells')){
-              // console.log('here vert 3')
-              // if no border above
-              removeEatableGhost()
-              ghostPosition[i] -= 20
-              addEatableGhost()
-              return
-            } else if (!cells[ghostPosition[i] - 1].classList.contains('noGoZoneCells')){
-              // console.log('here vert 4')
-              // must be a border above, so let's go left
-              removeEatableGhost()
-              ghostPosition[i] --
-              addEatableGhost()
-              return
-            } else if (!cells[ghostPosition[i] + 1].classList.contains('noGoZoneCells')) {
-              // console.log('here vert 5')
-              // must be border above and to left, so let's go right 3 to break the trap
-              rightThreeToBreakTrap(i)
-              return
-            }
+            removeEatableGhost(i)
+            ghostPosition[i] += 20
+            addEatableGhost(i)
+            return
+          } else if (!cells[ghostPosition[i] + 1].classList.contains('noGoZoneCells')){
+            // console.log('here vert 4')
+            // must be a border below, so let's go right
+            removeEatableGhost(i)
+            ghostPosition[i] ++
+            addEatableGhost(i)
+            return
+          } else if (!cells[ghostPosition[i] - 1].classList.contains('noGoZoneCells')) {
+            // console.log('here vert 5')
+            // must be border below and to right, so let's go left 3 to break the trap
+            // leftThreeToBreakTrap(i)
+            return
+          }
+        } else if (pacmanPosition > ghostPosition[i]) {
+          // console.log('here vert 2')
+          // move up
+          if (!cells[ghostPosition[i] - 20].classList.contains('noGoZoneCells')){
+            // console.log('here vert 3')
+            // if no border above
+            removeEatableGhost(i)
+            ghostPosition[i] -= 20
+            addEatableGhost(i)
+            return
+          } else if (!cells[ghostPosition[i] - 1].classList.contains('noGoZoneCells')){
+            // console.log('here vert 4')
+            // must be a border above, so let's go left
+            removeEatableGhost(i)
+            ghostPosition[i] --
+            addEatableGhost(i)
+            return
+          } else if (!cells[ghostPosition[i] + 1].classList.contains('noGoZoneCells')) {
+            // console.log('here vert 5')
+            // must be border above and to left, so let's go right 3 to break the trap
+            // rightThreeToBreakTrap(i)
+            return
           }
         }
       }
-    }, ghostSpeed)
-  }, ghostDangerTimer)
+      // }
+    }
+    console.log('here too?')
+  }, 1000)
 }
 
 function ghostIsDead(i) {
@@ -714,40 +719,77 @@ function ghostIsDead(i) {
 }
 
 function ghostEyesGoToGhostTown(i) {
-  ghostEyes[i] = setInterval(() => {
-if (ghostPosition[i] > ghostTownEnter) {
-  removeGhostEyes()
-  ghostPosition[i] -= 1
-  addGhostEyes()
-} else {
-  removeGhostEyes()
-  ghostPosition[i] += 1
-  addGhostEyes()
-}
+  console.log('eyes', i)
+  const ghostEyesTimer = setInterval(() => {
+    
+    if (ghostPosition[i] === ghostTownEnter) {
+      cells[230].classList.remove('ghost-eyes')
+      clearInterval(ghostEyesTimer)
+      console.log('gets to ghoat town')
+      
+      // spookyMoving(i)
+    }
+    if (ghostPosition[i] < ghostTownEnter) {
+      // move right
+      if (!cells[ghostPosition[i] + 1].classList.contains('noGoZoneCells')) {
+        // if no border to the right
+        removeGhostEyes(i)
+        ghostPosition[i] ++
+        addGhostEyes(i)
+        return
+      } else if (!cells[ghostPosition[i] + 20].classList.contains('noGoZoneCells')){
+        // must be a border on the right, so let's go down
+        removeGhostEyes(i)
+        ghostPosition[i] += 20
+        addGhostEyes(i)
+        return
+      } else if (!cells[ghostPosition[i] - 20].classList.contains('noGoZoneCells')) {
+        // must be border below and to right, so let's go up 3 spaces to break the trap
+        // upThreeToBreakTrap(i)
+      }
+    } else if (ghostPosition[i] > ghostTownEnter) {
+      if (!cells[ghostPosition[i] - 1].classList.contains('noGoZoneCells')) {
+        // if no border to the left
+        removeGhostEyes(i)
+        ghostPosition[i] --
+        addGhostEyes(i)
+        return
+      } else if (!cells[ghostPosition[i] - 20].classList.contains('noGoZoneCells')){
+        // must be a border on the left, so let's go down
+        removeGhostEyes(i)
+        ghostPosition[i] -= 20
+        addGhostEyes(i)
+        return
+      } else if (!cells[ghostPosition[i] - 20].classList.contains('noGoZoneCells')) {
+        // must be border below and to right, so let's go up 3 spaces to break the trap
+        // upThreeToBreakTrap(i)
+      }
+    }
   }, ghostDeadSpeed)
 
 }
 
-function addGhostEyes() {
-  cells[ghostPosition[0]].classList.add('eatable-ghost')
-  cells[ghostPosition[1]].classList.add('eatable-ghost')
-  cells[ghostPosition[2]].classList.add('eatable-ghost')
-  cells[ghostPosition[3]].classList.add('eatable-ghost')
+function addGhostEyes(i) {
+  cells[ghostPosition[i]].classList.add('ghost-eyes')
+  // cells[ghostPosition[1]].classList.add('eatable-ghost')
+  // cells[ghostPosition[2]].classList.add('eatable-ghost')
+  // cells[ghostPosition[3]].classList.add('eatable-ghost')
   // cells[ghostPosition[4]].classList.add('hunter-ghost')
   // console.log('ghost position', ghostPosition)
 }
 
-function removeGhostEyes() {
-  cells[ghostPosition[0]].classList.remove('eatable-ghost')
-  cells[ghostPosition[1]].classList.remove('eatable-ghost')
-  cells[ghostPosition[2]].classList.remove('eatable-ghost')
-  cells[ghostPosition[3]].classList.remove('eatable-ghost')
+function removeGhostEyes(i) {
+  cells[ghostPosition[i]].classList.remove('ghost-eyes')
+  cells[230].classList.remove('ghost-eyes')
+  // cells[ghostPosition[1]].classList.remove('eatable-ghost')
+  // cells[ghostPosition[2]].classList.remove('eatable-ghost')
+  // cells[ghostPosition[3]].classList.remove('eatable-ghost')
   // cells[ghostPosition[4]].classList.remove('hunter-ghost')
 }
 
 // START GAME
 buildTheGameGrid()
-handleOpeningMusic()
+// handleOpeningMusic()
 showingScore()
 buildingPacmanLivesDivsOnInfoScreen()
 
