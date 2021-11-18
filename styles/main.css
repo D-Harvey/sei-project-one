@@ -7,6 +7,24 @@ body {
   color: white;
 }
 
+.leftSide {
+  margin: 0;
+  display: flex;
+  justify-content: space-around;
+  height: 100vh;
+  background-color: black;
+  color: white;
+}
+
+.gameOver {
+  background-image: url('../assets/characters/gameover.png');   
+  background-repeat: no-repeat;
+  background-position: center; 
+  background-size: contain;
+  height: 200px;
+  width: 500px;
+}
+
 .information {
   width: 600px;
   display: flex;
@@ -94,12 +112,21 @@ body {
   margin-bottom: 30px;
 }
 
-.game-grid   {
+.game-grid {
   width: 700px;
   padding: 30px 50px 30px 50px;
   display:  flex;
   flex-wrap: wrap;
   justify-content: center;
+}
+
+.game-grid-hidden {
+  width: 700px;
+  padding: 30px 50px 30px 50px;
+  display:  flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  visibility: none;
 }
 
 .game-grid div {

@@ -54,6 +54,7 @@ const easyBtn = document.querySelector('.easy')
 const mediumBtn = document.querySelector('.medium')
 const hardBtn = document.querySelector('.hard')
 const sound = document.querySelector('#audio')
+const gameover = document.querySelector('.graphic')
 
 
 // functions
@@ -146,6 +147,9 @@ function buildTheGameGrid () {
 
 // in game functions
 function startGame() {
+  gameover.classList.remove('gameOver')
+  gameover.classList.add('graphic')
+  lives = 3
   removeGhost()
   removePacman()
   ghostPosition = [64, 75, 503, 517]
@@ -175,7 +179,10 @@ function startGameAgain() {
     for ( let i = 0; i < ghosts.length; i++) {  
       spookyMoving(i)
     }
-  } else {window.alert('done')}
+  } else {
+    gameover.classList.remove('graphic')
+    gameover.classList.add('gameOver')
+}
 }
 
 function easyLevel() {
