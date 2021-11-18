@@ -35,8 +35,9 @@ let ghostEatingTimer = null
 let ghostEyes = null
 const ghostDangerTimer = 30000
 const lifeCells = []
+let stop = 0
 
-const ghostSpeed = 500
+let ghostSpeed = 500
 const ghostDeadSpeed = 200
 
 
@@ -45,7 +46,9 @@ const ghostDeadSpeed = 200
 const grid = document.querySelector('.game-grid') 
 const showScore = document.querySelector('.score')
 const showLives = document.querySelector('.totalLives')
-const startBtn = document.querySelector('.startBtn')
+const easyBtn = document.querySelector('.easy')
+const mediumBtn = document.querySelector('.medium')
+const hardBtn = document.querySelector('.hard')
 const sound = document.querySelector('#audio')
 
 
@@ -139,6 +142,7 @@ function startGame() {
 
   console.log('lives', lives)
   console.log('time', timerId)
+  console.log(ghostSpeed)
   removeGhost()
   removePacman()
   ghostPosition = [64, 75, 503, 517]
@@ -155,8 +159,23 @@ function startGame() {
   }
 }
 
+function easyLevel() {
+  ghostSpeed = 500
+  startGame()
+}
+easyBtn.addEventListener('click', easyLevel)
 
-startBtn.addEventListener('click', startGame)
+function mediumLevel() {
+  ghostSpeed = 200
+  startGame()
+}
+mediumBtn.addEventListener('click', mediumLevel)
+
+function hardLevel() {
+  ghostSpeed = 100
+  startGame()
+}
+hardBtn.addEventListener('click', hardLevel)
 
 function endGame() {
 
@@ -171,7 +190,9 @@ function endGame() {
   // clearInterval(timerIdFive)
   // clearInterval(ghostEatingTimer)
   // clearInterval()
-  timerId = 'stop fucking working'
+  timerId = 'stop working'
+stop = 1
+console.log(stop)
 console.log('dead in end game')
 console.log('end game time', timerId)
 return
@@ -180,10 +201,14 @@ return
 
 // ghost movement
 function spookyMoving(i) {
-  // clearInterval(timerId)
+  console.log('stop', stop)
   clearInterval(ghostEatingTimer)
   timerId = setInterval(() => {
     console.log('in the game', timerId)
+    if (stop === 1){
+      clearInterval(timerId)
+      return
+    }
     if (ghostPosition[0] === pacmanPosition
     || ghostPosition[1] === pacmanPosition
     || ghostPosition[2] === pacmanPosition
@@ -443,7 +468,7 @@ function removeGhost() {
 
 // pacman movements
 function handleKeyUp(ev) {
-  // console.log(score)
+  
   if (ghostPosition[0] === pacmanPosition
     || ghostPosition[1] === pacmanPosition
     || ghostPosition[2] === pacmanPosition
@@ -460,43 +485,62 @@ function handleKeyUp(ev) {
     pacmanPosition = 277
     addPacman()
   } else {
-    removePacman()
+    
     switch (ev.code) {
       case 'ArrowRight':
         if (!cells[pacmanPosition + 1].classList.contains('noGoZoneCells')) {
+          removePacman()
           pacmanPosition++
+          addPacman()
           pacmanEats()
         }
         break
       case  'ArrowLeft':
         if (!cells[pacmanPosition - 1].classList.contains('noGoZoneCells')) {
+          removePacman()
           pacmanPosition--
+          addPacmanLeft()
           pacmanEats()
         }
         break
       case 'ArrowDown':
         if (!cells[pacmanPosition + 20].classList.contains('noGoZoneCells')) {
+          removePacman()
           pacmanPosition += 20
+          addPacmanDown()
           pacmanEats()
         }
         break
       case 'ArrowUp': 
         if (!cells[pacmanPosition - 20].classList.contains('noGoZoneCells')) {
+          removePacman()
           pacmanPosition -=  20
+          addPacmanUp()
           pacmanEats()
         }
         break
     }
-    addPacman()
+    
   }
 }
 
 function addPacman() {
   cells[pacmanPosition].classList.add('pacman')
 }
-
+function addPacmanLeft() {
+  cells[pacmanPosition].classList.add('pacmanLeft')
+}
+function addPacmanUp() {
+  cells[pacmanPosition].classList.add('pacmanUp')
+}
+function addPacmanDown() {
+  cells[pacmanPosition].classList.add('pacmanDown')
+}
 function removePacman() {
   cells[pacmanPosition].classList.remove('pacman')
+  cells[pacmanPosition].classList.remove('pacmanLeft')
+  cells[pacmanPosition].classList.remove('pacmanUp')
+  cells[pacmanPosition].classList.remove('pacmanDown')
 }
 
 function pacmanEats() {
@@ -518,7 +562,7 @@ function pacmanEats() {
 function pacmanIsDead() {
   // handleDeathMusic()
   // startGame()
-
+console.log('pacman is dead')
   lives --
 
   endGame()
