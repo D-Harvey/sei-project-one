@@ -91,22 +91,22 @@ function showingScore() {
 
 // sound effect functions
 function handleOpeningMusic () {
-  sound.src = './assets/sounds/pacman_beginning.wav'
+  sound.src = '../assets/sounds/pacman_beginning.wav'
   sound.play()
 }
 
 function handleInGameMusic () {
-  sound.src = './assets/sounds/pacman_chomp.wav'
+  sound.src = '../assets/sounds/pacman_chomp.wav'
   sound.play()
 }
 
 function handleFruitMusic() {
-  sound.src = './assets/sounds/pacman_eatfruit.wav'
+  sound.src = '../assets/sounds/pacman_eatfruit.wav'
   sound.play()
 }
 
 function handleEatGhostMusic() {
-  sound.src = './assets/sounds/pacman_eatghost.wav'
+  sound.src = '../assets/sounds/pacman_eatghost.wav'
   sound.play()
 }
 
