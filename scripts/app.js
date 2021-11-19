@@ -52,7 +52,7 @@ const easyBtn = document.querySelector('.easy')
 const mediumBtn = document.querySelector('.medium')
 const hardBtn = document.querySelector('.hard')
 const sound = document.querySelector('#audio')
-const info = document.querySelector('.information')
+
 
 
 // functions
@@ -149,6 +149,7 @@ function buildTheGameGrid () {
     //   } 
     // }) 
   }
+  fruit()
 }
 
 function removeGameGrid() {
@@ -589,6 +590,10 @@ function pacmanEats() {
     // addEatableGhost()
     // pacmanEatingGhosts(i)
     showingScore()
+  } else if (cells[pacmanPosition].classList.contains('fruit')) {
+    score += 1000
+    cells[pacmanPosition].classList.remove('fruit')
+    showingScore()
   }
 }
 
@@ -776,7 +781,17 @@ function ghostIsDead(i) {
   } 
 }
 
+function fruit() {
+  const fruitTimer = setInterval(() => {
+    if (lives === 0) {
+      clearInterval(fruitTimer)
+      return
+    }
+    cells[329].classList.remove('fruit')
+    cells[329].classList.add('fruit')
 
+  }, 5000) 
+}
 
 
 

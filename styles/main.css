@@ -336,3 +336,10 @@ animation: pulse-red 3s infinite; */
   background-repeat: no-repeat;
   background-position: center; 
 }
+
+.fruit {
+  background-image: url('../assets/characters/cherries.png');   
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+}
