@@ -162,7 +162,7 @@ function removeGameGrid() {
 
 function winner() {
   ghostPosition [271, 271, 271, 271]
-
+  grid.classList.remove('game-grid-ghost-eating')
   const bin = document.querySelector('.game-grid')
   console.log(bin)
   while (bin.firstChild) {
@@ -221,7 +221,7 @@ function easyLevel() {
 easyBtn.addEventListener('click', easyLevel)
 
 function mediumLevel() {
-  ghostSpeed = 200
+  ghostSpeed = 500
   startGame()
 }
 mediumBtn.addEventListener('click', mediumLevel)
@@ -235,9 +235,15 @@ hardBtn.addEventListener('click', hardLevel)
 // ghost movement
 function spookyMoving(i) {
 grid.classList.remove('game-grid-ghost-eating')
-  if (ghostPosition[i] === 270) {
-    ghostPosition[i] = 230
-  }
+  if (ghostPosition[0] === 270) {
+    ghostPosition[0] = 273
+  } else if (ghostPosition[1] === 270) {
+    ghostPosition[1] = 266
+  } else if (ghostPosition[2] === 270) {
+    ghostPosition[2] = 330
+  } else if (ghostPosition[3] === 270) {
+    ghostPosition[3] = 230
+  } 
   superPoints = 0
   resetGhosts()
   const timerId = setInterval(() => {

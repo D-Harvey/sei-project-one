@@ -274,6 +274,27 @@ animation: pulse-red 3s infinite; */
   background-position: center; 
 }
 
+.red-ghostLeft {
+  background-image: url('../assets/characters/redMovingLeft.png');   
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+}
+
+.red-ghostUp {
+  background-image: url('../assets/characters/redMovingUp.png');   
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+}
+
+.red-ghostDown {
+  background-image: url('../assets/characters/redMovingDown.png');   
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+}
+
 .blue-ghost {
   background-image: url('../assets/characters/blueMovingRight.png');   
   background-size: contain;
