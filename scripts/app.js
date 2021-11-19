@@ -100,6 +100,16 @@ function handleInGameMusic () {
   sound.play()
 }
 
+function handleFruitMusic() {
+  sound.src = '../assets/sounds/pacman_eatfruit.wav'
+  sound.play()
+}
+
+function handleEatGhostMusic() {
+  sound.src = '../assets/sounds/pacman_eatghost.wav'
+  sound.play()
+}
+
 function handleDeathMusic () {
   sound.src = '../assets/sounds/pacman_death.wav'
   sound.play()
@@ -228,7 +238,7 @@ function mediumLevel() {
 mediumBtn.addEventListener('click', mediumLevel)
 
 function hardLevel() {
-  ghostSpeed = 100
+  ghostSpeed = 300
   startGame()
 }
 hardBtn.addEventListener('click', hardLevel)
@@ -592,6 +602,7 @@ function pacmanEats() {
     showingScore()
   } else if (cells[pacmanPosition].classList.contains('fruit')) {
     score += 1000
+    handleFruitMusic()
     cells[pacmanPosition].classList.remove('fruit')
     showingScore()
   }
@@ -775,6 +786,7 @@ function pacmanEatingGhosts(i) {
 function ghostIsDead(i) {
   if (ghostPosition[i] === pacmanPosition) {
     cells[ghostPosition[i]].classList.remove('eatable-ghost')
+    handleEatGhostMusic()
     // cells[ghostPosition[i]].classList.add('ghost-eyes')
     ghostPosition[i] = 270
     // ghostEyesGoToGhostTown(i)
@@ -790,7 +802,7 @@ function fruit() {
     cells[329].classList.remove('fruit')
     cells[329].classList.add('fruit')
 
-  }, 5000) 
+  }, 20000) 
 }
 
 
