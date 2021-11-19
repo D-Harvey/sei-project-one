@@ -91,22 +91,22 @@ function showingScore() {
 
 // sound effect functions
 function handleOpeningMusic () {
-  sound.src = '../assets/sounds/pacman_beginning.wav'
+  sound.src = './assets/sounds/pacman_beginning.wav'
   sound.play()
 }
 
 function handleInGameMusic () {
-  sound.src = '../assets/sounds/pacman_chomp.wav'
+  sound.src = './assets/sounds/pacman_chomp.wav'
   sound.play()
 }
 
 function handleFruitMusic() {
-  sound.src = '../assets/sounds/pacman_eatfruit.wav'
+  sound.src = './assets/sounds/pacman_eatfruit.wav'
   sound.play()
 }
 
 function handleEatGhostMusic() {
-  sound.src = '../assets/sounds/pacman_eatghost.wav'
+  sound.src = './assets/sounds/pacman_eatghost.wav'
   sound.play()
 }
 
@@ -635,6 +635,7 @@ function removeEatableGhost(i) {
   // cells[ghostPosition[4]].classList.remove('hunter-ghost')
 }
 
+
 function pacmanEatingGhosts(i) {
   console.log('just into eating ghosts', i)
   grid.classList.add('game-grid-ghost-eating')
@@ -803,6 +804,7 @@ function fruit() {
 
   }, 20000) 
 }
+
 
 
 
