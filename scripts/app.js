@@ -238,7 +238,7 @@ function mediumLevel() {
 mediumBtn.addEventListener('click', mediumLevel)
 
 function hardLevel() {
-  ghostSpeed = 300
+  ghostSpeed = 250
   startGame()
 }
 hardBtn.addEventListener('click', hardLevel)
