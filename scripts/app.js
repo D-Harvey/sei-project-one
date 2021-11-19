@@ -13,6 +13,7 @@ const ghostBoundary = [263, 264, 266, 273, 274, 275, 229, 109, 329, 449, 569]
 const wormholes = [278, 261]
 const ghostTownEnter = 229
 let superPoints = 0
+let pillseaten = 0
 
 const ghosts = ['red', 'blue', 'pink', 'orange']
 let ghostPosition = [64, 75, 503, 517]
@@ -33,9 +34,6 @@ let pacmanY = Math.floor(pacmanPosition / width)
 let pacmanX = Math.floor(pacmanPosition % width)
 
 
-
-
-const ghostDangerTimer = 30000
 let lifeCells = []
 
 
@@ -54,7 +52,7 @@ const easyBtn = document.querySelector('.easy')
 const mediumBtn = document.querySelector('.medium')
 const hardBtn = document.querySelector('.hard')
 const sound = document.querySelector('#audio')
-const gameover = document.querySelector('.graphic')
+const info = document.querySelector('.information')
 
 
 // functions
@@ -62,16 +60,24 @@ const gameover = document.querySelector('.graphic')
 // information window functions
 let lives = 3
 function buildingPacmanLivesDivsOnInfoScreen() {
-  
-  // console.log('lf 1', lifeCells)
-  // for (let i = 0; i < lives; i++){
-  //   const lifeCell = document.createElement('div')
-  //   showLives.appendChild(lifeCell)
-  //   lifeCells.push(lifeCell)
-  //   // lifeCell.classList.add('lives')
-  //   lifeCell.innerHTML = lives
-  const lifeCell = document.querySelector('.livesLeft')
-  lifeCell.innerText = lives
+  removeLivesOnScreen()
+  console.log('lf 1', lifeCells)
+  console.log(lives)
+  for (let i = 0; i < lives; i++){
+    const lifeCell = document.createElement('div')
+    showLives.appendChild(lifeCell)
+    lifeCells.push(lifeCell)
+    lifeCell.classList.add('lives')
+  }
+}
+
+function removeLivesOnScreen() {
+  const bin = document.querySelector('.totalLives')
+  console.log(bin)
+  while (bin.firstChild) {
+    bin.removeChild(bin.firstChild)
+
+  }
 }
 
 let score = 0
@@ -85,17 +91,17 @@ function showingScore() {
 
 // sound effect functions
 function handleOpeningMusic () {
-  sound.src = 'assets/sounds/pacman_beginning.wav'
+  sound.src = '../assets/sounds/pacman_beginning.wav'
   sound.play()
 }
 
 function handleInGameMusic () {
-  sound.src = 'assets/sounds/pacman_chomp.wav'
+  sound.src = '../assets/sounds/pacman_chomp.wav'
   sound.play()
 }
 
 function handleDeathMusic () {
-  sound.src = 'assets/sounds/pacman_death.wav'
+  sound.src = '../assets/sounds/pacman_death.wav'
   sound.play()
 }
 
@@ -145,17 +151,39 @@ function buildTheGameGrid () {
   }
 }
 
+function removeGameGrid() {
+  const bin = document.querySelector('.game-grid')
+  console.log(bin)
+  while (bin.firstChild) {
+    bin.removeChild(bin.firstChild)
+    bin.classList.add('gameOver')
+  }
+}
+
+function winner() {
+  ghostPosition [271, 271, 271, 271]
+
+  const bin = document.querySelector('.game-grid')
+  console.log(bin)
+  while (bin.firstChild) {
+    bin.removeChild(bin.firstChild)
+    bin.classList.add('winner')
+  }
+}
+
 // in game functions
 function startGame() {
-  gameover.classList.remove('gameOver')
-  gameover.classList.add('graphic')
+  // removeGameGrid()
+  // grid.classList.remove('gameOver')
+  // buildTheGameGrid ()
   lives = 3
+  score = 0
   removeGhost()
   removePacman()
   ghostPosition = [64, 75, 503, 517]
   pacmanPosition = 569
   buildingPacmanLivesDivsOnInfoScreen()
-  addGhost()
+  // addGhost()
   addPacman()
   document.addEventListener('keyup', handleKeyUp)
   for ( let i = 0; i < ghosts.length; i++) {  
@@ -180,10 +208,11 @@ function startGameAgain() {
       spookyMoving(i)
     }
   } else {
-    gameover.classList.remove('graphic')
-    gameover.classList.add('gameOver')
+    removeGameGrid()
+  }
 }
-}
+
+
 
 function easyLevel() {
   ghostSpeed = 1000
@@ -205,10 +234,17 @@ hardBtn.addEventListener('click', hardLevel)
 
 // ghost movement
 function spookyMoving(i) {
+grid.classList.remove('game-grid-ghost-eating')
+  if (ghostPosition[i] === 270) {
+    ghostPosition[i] = 230
+  }
   superPoints = 0
-  removeEatableGhost(i)
-  removeGhostEyes(i)
+  resetGhosts()
   const timerId = setInterval(() => {
+    if (pillseaten === 197) {
+      clearInterval(timerId)
+      return
+    }
     if (ghostPosition[0] === pacmanPosition
     || ghostPosition[1] === pacmanPosition
     || ghostPosition[2] === pacmanPosition
@@ -216,8 +252,7 @@ function spookyMoving(i) {
     ) {
       clearInterval(timerId)
       return pacmanIsDead()
-    }
-    else if (superPoints === 10 
+    } else if (superPoints === 10 
     ) {
       pacmanEatingGhosts(i)
       clearInterval(timerId)
@@ -230,23 +265,17 @@ function spookyMoving(i) {
       removeGhost()
       ghostPosition[i] = 277
       addGhost()
-    }
-    
-    else {
+    } else {
       console.log('still in spooky')
       
-
       pacmanY = Math.floor(pacmanPosition / width)
       pacmanX = Math.floor(pacmanPosition % width)
-
 
       ghostY[i] = Math.floor(ghostPosition[i] / width)
       ghostX[i] = Math.floor(ghostPosition[i] % width)
 
-
       ghostDistanceY[i] = (Math.abs(ghostY[i] - pacmanY))
       ghostDistanceX[i] = (Math.abs(ghostX[i] - pacmanX)) 
-
 
       if (ghostDistanceX[i] >= ghostDistanceY[i]){
         // move horizontally
@@ -450,9 +479,19 @@ function removeGhost() {
   // cells[ghostPosition[4]].classList.remove('hunter-ghost')
 }
 
+function resetGhosts() {
+  for (let i = 0; i < cells.length; i++) {
+    cells[i].classList.remove('eatable-ghost')
+    cells[i].classList.remove('ghost-eyes')
+  }
+}
+
 // pacman movements
 function handleKeyUp(ev) {
-  
+  if (pillseaten === 197) {
+    winner()
+    return
+  }
   if (ghostPosition[0] === pacmanPosition
     || ghostPosition[1] === pacmanPosition
     || ghostPosition[2] === pacmanPosition
@@ -529,12 +568,16 @@ function removePacman() {
 function pacmanEats() {
   if (cells[pacmanPosition].classList.contains('pills')) {
     score += 10
+    pillseaten ++
     cells[pacmanPosition].classList.remove('pills')
     handleInGameMusic()
     showingScore()
+    console.log('pills eaten', pillseaten)
   } else if (cells[pacmanPosition].classList.contains('super')) {
     score += 100
     superPoints = 10
+    pillseaten ++
+    console.log('pills eaten', pillseaten)
     cells[pacmanPosition].classList.remove('super')
     removeGhost()
     // addEatableGhost()
@@ -573,8 +616,10 @@ function removeEatableGhost(i) {
 
 function pacmanEatingGhosts(i) {
   console.log('just into eating ghosts', i)
+  grid.classList.add('game-grid-ghost-eating')
   // 30" timer for ghost eating
-  removeGhost()
+  // removeGhost()
+  addEatableGhost(i)
   console.log('eating ghosts')
   let ghostsec = 0
   const ghostEatingTimer = setInterval(() => {
@@ -584,7 +629,7 @@ function pacmanEatingGhosts(i) {
     ghostsec ++
     if (ghostsec >= 30) {
       clearInterval(ghostEatingTimer)
-      // console.log('in ticker')
+      resetGhosts()
       return spookyMoving(i)
     } 
     {console.log('gh sec', ghostsec)
@@ -634,8 +679,7 @@ function pacmanEatingGhosts(i) {
             ghostPosition[i] += 20
             addEatableGhost(i)
             return
-          } 
-          else if (!cells[ghostPosition[i] - 20].classList.contains('noGoZoneCells')) {
+          } else if (!cells[ghostPosition[i] - 20].classList.contains('noGoZoneCells')) {
             // must be border below and to right, so let's go up 3 spaces to break the trap
             // upThreeToBreakTrap(i)
             return
@@ -720,10 +764,24 @@ function pacmanEatingGhosts(i) {
 function ghostIsDead(i) {
   if (ghostPosition[i] === pacmanPosition) {
     cells[ghostPosition[i]].classList.remove('eatable-ghost')
-    cells[ghostPosition[i]].classList.add('ghost-eyes')
-    ghostEyesGoToGhostTown(i)
+    // cells[ghostPosition[i]].classList.add('ghost-eyes')
+    ghostPosition[i] = 270
+    // ghostEyesGoToGhostTown(i)
   } 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function ghostEyesGoToGhostTown(i) {
   console.log('eyes', i)
@@ -796,7 +854,7 @@ function removeGhostEyes(i) {
 
 // START GAME
 buildTheGameGrid()
-// handleOpeningMusic()
+handleOpeningMusic()
 showingScore()
 buildingPacmanLivesDivsOnInfoScreen()
 

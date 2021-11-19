@@ -21,8 +21,17 @@ body {
   background-repeat: no-repeat;
   background-position: center; 
   background-size: contain;
-  height: 200px;
-  width: 500px;
+  height: 400px;
+  margin-top: 150px; 
+}
+
+.winner {
+  background-image: url('../assets/characters/winner-win.gif');   
+  background-repeat: no-repeat;
+  background-position: center; 
+  background-size: contain;
+  height: 800px;
+  /* margin-top: 150px;  */
 }
 
 .information {
@@ -96,6 +105,12 @@ body {
   font-size: 20px;
 }
 
+.lifeTally {
+  display: flex;
+  align-items: center;
+  height: 100px;
+
+}
 .totalLives {
   display: flex;
   align-items: center;
@@ -113,6 +128,7 @@ body {
 }
 
 .game-grid {
+
   width: 700px;
   padding: 30px 50px 30px 50px;
   display:  flex;
@@ -128,6 +144,17 @@ body {
   justify-content: center;
   visibility: none;
 }
+
+.game-grid-ghost-eating {
+  width: 700px;
+  padding: 30px 50px 30px 50px;
+  display:  flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  background-image: url('https://cdn.dribbble.com/users/1751407/screenshots/3606689/thunder_dribbble.gif');
+}
+
+
 
 .game-grid div {
   width: 34px;
@@ -150,9 +177,28 @@ body {
   }
 
 .wormhole {
-  background-color: rgb(20, 20, 20);
-  color: white;
+    background: rgba(255, 121, 63, 1);
+    box-shadow: 0 0 0 0 rgba(255, 121, 63, 1);
+    border-radius: 20%;
+    animation: pulse 3s infinite;
 }
+@keyframes pulse {
+    0% {
+      transform: scale(1.2);
+      box-shadow: 0 0 0 0 rgba(255, 121, 63, 0.7);
+    }
+    
+    70% {
+      transform: scale(1.4);
+      box-shadow: 0 0 0 10px rgba(255, 121, 63, 0);
+    }
+    
+    100% {
+      transform: scale(1.2);
+      box-shadow: 0 0 0 0 rgba(255, 121, 63, 0);
+    }
+  }
+
   
   .boundary {
 
@@ -170,7 +216,28 @@ body {
   background-size: 10px;
   background-repeat: no-repeat;
   background-position: center; 
+/* border: red;
+background-color: red;
+border-radius: 100%;
+animation: pulse-red 3s infinite; */
 }
+/* 
+@keyframes pulse-red {
+  0% {
+    transform: scale(0.2);
+    box-shadow: 0 0 0 0 rgba(255, 63, 63, 0.7);
+  }
+  
+  70% {
+    transform: scale(0.5);
+    box-shadow: 0 0 0 10px rgba(255, 121, 63, 0);
+  }
+  
+  100% {
+    transform: scale(0.2);
+    box-shadow: 0 0 0 0 rgba(255, 121, 63, 0);
+  }
+} */
 
 .pacman {
   background-image: url('../assets/characters/pacman.png');   
