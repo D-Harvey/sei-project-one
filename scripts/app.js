@@ -110,7 +110,7 @@ function buildTheGameGrid () {
   for (let i = 0; i < gameGrid; i++) {
     const cell = document.createElement('div')
     grid.appendChild(cell)
-    cell.innerText = i
+    // cell.innerText = i
     cells.push(cell)
     noGoZoneCells.some(ngz => {
       const block = ngz.valueOf()
