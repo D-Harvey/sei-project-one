@@ -72,7 +72,24 @@ body {
   border-style: ridge;
   margin: 10px;
   padding: 20px;
+  animation: pulse-easy 2s infinite;
 }
+@keyframes pulse-easy {
+    0% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(108, 255, 63, 0.7);
+    }
+    
+    70% {
+      transform: scale(1);
+      box-shadow: 0 0 0 10px rgba(108, 255, 63, 0);
+    }
+    
+    100% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(108, 255, 63, 0);
+    }
+  }
 
 .medium {
   display: flex;
@@ -85,7 +102,24 @@ body {
   border-style: ridge;
   margin: 10px;
   padding: 20px;
+  animation: pulse-medium 2s infinite;
 }
+@keyframes pulse-medium {
+    0% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(255, 166, 0, 0.7);
+    }
+    
+    70% {
+      transform: scale(1);
+      box-shadow: 0 0 0 10px rgba(255, 166, 0, 0);
+    }
+    
+    100% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(255, 166, 0, 0);
+    }
+  }
 
 .hard {
   display: flex;
@@ -98,7 +132,24 @@ body {
   border-style: ridge;
   margin: 10px;
   padding: 20px;
+  animation: pulse-hard 2s infinite;
 }
+@keyframes pulse-hard {
+    0% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7);
+    }
+    
+    70% {
+      transform: scale(1);
+      box-shadow: 0 0 0 10px rgba(255, 0, 0, 0);
+    }
+    
+    100% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
+    }
+  }
 
 .detail {
   width: 600px;
@@ -125,7 +176,24 @@ body {
   width: 100px;
   height: 50px;
   margin-bottom: 30px;
+  animation: pulse-pacman 2s infinite;
 }
+@keyframes pulse-pacman {
+    0% {
+      transform: scale(0.9);
+      /* box-shadow: 0 0 0 0 rgba(255, 255, 0, 0.7); */
+    }
+    
+    70% {
+      transform: scale(1);
+      /* box-shadow: 0 0 0 10px rgba(255, 255, 0, 0); */
+    }
+    
+    100% {
+      transform: scale(0.9);
+      /* box-shadow: 0 0 0 0 rgba(255, 255, 0, 0); */
+    }
+  }
 
 .game-grid {
 
@@ -239,6 +307,12 @@ animation: pulse-red 3s infinite; */
   }
 } */
 
+.fruit {
+  background-image: url('../assets/characters/cherries.png');   
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+}
 .pacman {
   background-image: url('../assets/characters/pacman.png');   
   background-size: contain;
@@ -337,9 +411,3 @@ animation: pulse-red 3s infinite; */
   background-position: center; 
 }
 
-.fruit {
-  background-image: url('../assets/characters/cherries.png');   
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center; 
-}

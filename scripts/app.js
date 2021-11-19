@@ -635,7 +635,6 @@ function removeEatableGhost(i) {
   // cells[ghostPosition[4]].classList.remove('hunter-ghost')
 }
 
-
 function pacmanEatingGhosts(i) {
   console.log('just into eating ghosts', i)
   grid.classList.add('game-grid-ghost-eating')
@@ -804,15 +803,6 @@ function fruit() {
 
   }, 20000) 
 }
-
-
-
-
-
-
-
-
-
 
 
 
